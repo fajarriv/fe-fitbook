@@ -2,6 +2,8 @@ import React from "react";
 import { Box, Flex, Text, Button, SimpleGrid, Icon } from "@chakra-ui/react";
 import { MdCheckCircle, MdCancel, MdEventAvailable } from "react-icons/md";
 
+// fix ui
+
 const TrainerDashboard = () => {
   const getStatusIcon = (status) => {
     switch (status) {
@@ -55,7 +57,7 @@ const TrainerDashboard = () => {
               p={5}
               shadow="md"
               borderWidth="1px"
-              bg="white"
+              bg="grey"
               rounded="md"
             >
               <Text fontSize="p-desktop" fontWeight="500" fontFamily="poppins">
