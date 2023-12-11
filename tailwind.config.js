@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        montserrat: ["var(--font-poppins)"],
+        poppins: ["var(--font-poppins)"],
       },
       fontSize: {
         "h1-desktop": [
