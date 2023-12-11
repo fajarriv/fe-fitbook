@@ -1,8 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
   const [daftarKelas, setDaftarKelas] = useState([])
+
+  const router = useRouter()
 
 
   useEffect(() => {
@@ -39,6 +42,7 @@ export default function Page() {
 
   const handleCardClick = (kelas) => {
     // redirect ke detail kelas
+    router.push(`/detailKelas/${kelas.id}`)
   }
 
   return (
