@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 
 const EditReportForm = ({ setShowModal, report, editReport }) => {
-    const [newTitle, setNewTitle] = useState("");
-    const [newDescription, setNewDescription] = useState("");
+    const [balasanLaporan, setBalasanLaporan] = useState("");
 
     const handleEditReport = () => {
         const reportId = report.id;
-        let reportTitle = newTitle.length === 0 ? report.title : newTitle;
-        let reportDescription = newDescription.length === 0 ? report.description : newDescription;
-
-        editReport(reportId, reportTitle, reportDescription);
+        editReport(reportId, balasanLaporan);
     };
 
     return (
@@ -26,32 +22,17 @@ const EditReportForm = ({ setShowModal, report, editReport }) => {
                         </h2>
                         <hr className="border-t-2 border-gray-500" />
                         <div className="mb-2 mt-4">
-                            <label className="font-bold mr-2" htmlFor="title">
-                                Title:
+                            <label className="font-bold mr-2" htmlFor="balasanLaporan">
+                                Response:
                             </label>
                             <input
                                 type="text"
-                                id="title"
-                                name="title"
-                                value={newTitle}
-                                onChange={e => {setNewTitle(e.target.value)}}
+                                id="balasanLaporan"
+                                name="balasanLaporan"
+                                value={balasanLaporan}
+                                onChange={e => setBalasanLaporan(e.target.value)}
                                 className="bg-white border border-black rounded px-2"
-                                placeholder={report.title}
-                                autoComplete="off"
-                            />
-                        </div>
-                        <div className="mb-2">
-                            <label className="font-bold mr-2" htmlFor="description">
-                                Description:
-                            </label>
-                            <input
-                                type="text"
-                                id="description"
-                                name="description"
-                                value={newDescription}
-                                onChange={e => setNewDescription(e.target.value)}
-                                className="bg-white border border-black rounded px-2"
-                                placeholder={report.description}
+                                placeholder="Enter your response here"
                                 autoComplete="off"
                             />
                         </div>

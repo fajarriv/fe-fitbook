@@ -8,17 +8,14 @@ const DisplayUserReports = () => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [newReport, setNewReport] = useState({
-        title: "",
-        description: "",
+        pelapor: "",
+        isiLaporan: "",
     });
 
     useEffect(() => {
-        // Placeholder reports
-        setReports([
-            { id: 1, title: "Report 1", description: "Description 1" },
-            { id: 2, title: "Report 2", description: "Description 2" },
-            { id: 3, title: "Report 3", description: "Description 3" },
-        ]);
+        fetch('https://rpl.fitbookit.net/api/laporan')
+            .then(response => response.json())
+            .then(data => setReports(data.data));
     }, []);
 
     const handleReportChange = (event) => {
@@ -29,39 +26,54 @@ const DisplayUserReports = () => {
         }));
     };
 
-    const handleRemoveReport = (report) => {
-        const newReports = reports.filter(
-            (reportDetail) => reportDetail !== report
-        );
-        setReports(newReports);
+    const handleRemoveReport = (reportId) => {
+        fetch(`https://rpl.fitbookit.net/api/hapusLaporan/${reportId}`, {
+            method: 'DELETE',
+        })
+        .then(() => {
+            setReports(reports.filter((report) => report.id !== reportId));
+        });
     };
 
     const handleAddReport = () => {
-        if (!newReport.title || !newReport.description) {
+        if (!newReport.pelapor || !newReport.isiLaporan) {
             alert("Please provide all required input");
             return;
         }
 
-        setReports((prevState) => [...prevState, newReport]);
-        setNewReport({
-            title: "",
-            description: "",
+        fetch('https://rpl.fitbookit.net/api/buatLaporan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newReport),
+        })
+        .then(response => response.json())
+        .then(data => {
+            setReports((prevState) => [...prevState, data.data]);
+            setNewReport({
+                pelapor: "",
+                isiLaporan: "",
+            });
+            setShowAddModal(false);
         });
-        setShowAddModal(false);
     };
 
-    const handleEditReport = (reportId, reportTitle, reportDescription) => {
-        const editedReport = {
-            id: reportId,
-            title: reportTitle,
-            description: reportDescription,
-        };
-        setReports((prevState) =>
-            prevState.map((report) =>
-                report.id === editedReport.id ? editedReport : report
-            )
-        );
-        setShowEditModal(false);
+    const handleEditReport = (reportId, balasanLaporan) => {
+        fetch(`https://rpl.fitbookit.net/api/balasLaporan/${reportId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ balasanLaporan }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            setReports(reports.map((report) =>
+                report.id === data.data.id ? data.data : report
+            ));
+            setShowEditModal(false);
+        });
     };
 
     return (
@@ -69,7 +81,7 @@ const DisplayUserReports = () => {
             <h1 className="text-4xl text-center my-8 font-bold">User Reports</h1>
             <div className="mt-4 text-center mb-8">
                 <button
-                    className="bg-blue-600 p-4 rounded font-semibold"
+                    className="bg-green p-4 rounded font-semibold text-white"
                     onClick={() => setShowAddModal(true)}
                 >
                     Add New Report

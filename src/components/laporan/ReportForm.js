@@ -15,32 +15,32 @@ const ReportForm = ({ handleAddReport, setShowModal, newReport, handleReportChan
                         </h2>
                         <hr className="border-t-2 border-gray-500" />
                         <div className="mb-2 mt-4">
-                            <label className="font-bold mr-2" htmlFor="title">
-                                Title:
+                            <label className="font-bold mr-2" htmlFor="pelapor">
+                                Reporter:
                             </label>
                             <input
                                 type="text"
-                                id="title"
-                                name="title"
-                                value={newReport.title}
+                                id="pelapor"
+                                name="pelapor"
+                                value={newReport.pelapor}
                                 onChange={handleReportChange}
                                 className="bg-white border border-black rounded px-2"
-                                placeholder="Report Title"
+                                placeholder="Reporter Name"
                                 autoComplete="off"
                             />
                         </div>
                         <div className="mb-2">
-                            <label className="font-bold mr-2" htmlFor="description">
-                                Description:
+                            <label className="font-bold mr-2" htmlFor="isiLaporan">
+                                Report Content:
                             </label>
                             <input
                                 type="text"
-                                id="description"
-                                name="description"
-                                value={newReport.description}
+                                id="isiLaporan"
+                                name="isiLaporan"
+                                value={newReport.isiLaporan}
                                 onChange={handleReportChange}
                                 className="bg-white border border-black rounded px-2"
-                                placeholder="Report Description"
+                                placeholder="Report Content"
                                 autoComplete="off"
                             />
                         </div>
