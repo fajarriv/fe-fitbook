@@ -1,38 +1,33 @@
+"use client";
 import React from "react";
-import { Box, Button, Input, Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import Image from "next/image";
+import LoginForm from "@/components/elements/LoginForm"; // Make sure the path is correct
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-cream p-24">
-      <div className="z-10 max-w-5xl w-full text-center">
-        <Image
-          src="/fitbook-logo.svg" // Replace with your FitBook logo
-          alt="FitBook Logo"
-          width={200}
-          height={50}
-          priority
-        />
-        <Text className="text-h1-desktop text-green my-6">
-          Welcome to FitBook
-        </Text>
-        <Box className="w-full max-w-sm mx-auto p-8 bg-white shadow-md rounded-md">
-          <Text className="text-h2-desktop text-black mb-6">
-            Login to Your Account
+    <>
+      {/* Navbar goes here */}
+      <main className="flex flex-col min-h-screen justify-center items-center bg-cream pt-24 pb-24">
+        <Box className="text-center">
+          <Image
+            src="/fitbook-logo.svg" // Replace with your actual path to the FitBook logo
+            alt="FitBook Logo"
+            width={200}
+            height={50}
+            priority
+          />
+          <Text className="text-h1-desktop text-green mt-6 mb-12">
+            Welcome to FitBook
           </Text>
-          <Input placeholder="Email" mb="4" />
-          <Input placeholder="Password" mb="6" type="password" />
-          <Button colorScheme="green" width="full">
-            Login
-          </Button>
+          <LoginForm />
         </Box>
-      </div>
-
-      <footer className="fixed bottom-0 left-0 w-full h-24 border-t border-greyborder flex items-center justify-center">
+      </main>
+      <footer className="w-full h-24 border-t border-greyborder flex items-center justify-center">
         <p className="text-p-desktop text-black">
           © {new Date().getFullYear()} FitBook. All rights reserved.
         </p>
       </footer>
-    </main>
+    </>
   );
 }
