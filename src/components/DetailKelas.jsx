@@ -55,7 +55,7 @@ const DetailKelas = ({ id }) => {
     <div className="container mx-auto mt-10 px-4">
       <h1 className="text-3xl font-bold mb-4">{kelasDetail?.judul}</h1>
       <p className="text-lg mb-4">{kelasDetail?.deskripsi}</p>
-      
+
       <div className="mt-6">
         <h2 className="text-2xl font-bold mb-2">Class Details</h2>
         <p className="text-lg">
@@ -79,11 +79,11 @@ const DetailKelas = ({ id }) => {
           {kelasDetail?.status}
         </p>
         <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={openModal}
-      >
-        Lihat Profil Trainer
-      </button>
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={openModal}
+        >
+          Lihat Profil Trainer
+        </button>
       </div>
 
       {showModal && (
