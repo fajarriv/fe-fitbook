@@ -38,6 +38,11 @@ const Navbar = () => {
             Update Profile
           </Button>
         </Link>
+        <Link href="/laporan" passHref>
+          <Button as="a" variant="ghost">
+            Laporan
+          </Button>
+        </Link>
       </Flex>
     </Flex>
   );
