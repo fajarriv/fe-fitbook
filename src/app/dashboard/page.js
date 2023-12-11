@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import ClientDashboard from "@/components/dashboard/ClientDashboard";
-// import TrainerDashboard from "./TrainerDashboard";
+import TrainerDashboard from "@/components/dashboard/TrainerDashboard";
+import RootLayout from "../layout";
 // import AdminDashboard from "./AdminDashboard";
 // import { useAuth } from "../hooks/useAuth";
 
@@ -15,9 +16,9 @@ const Dashboard = () => {
     case "client":
       DashboardComponent = ClientDashboard;
       break;
-    // case "trainer":
-    //   DashboardComponent = TrainerDashboard;
-    //   break;
+    case "trainer":
+      DashboardComponent = TrainerDashboard;
+      break;
     // case "admin":
     //   DashboardComponent = AdminDashboard;
     //   break;
@@ -26,7 +27,11 @@ const Dashboard = () => {
       DashboardComponent = () => <div>Unauthorized</div>;
   }
 
-  return <DashboardComponent />;
+  return (
+    <RootLayout>
+      <DashboardComponent />
+    </RootLayout>
+  );
 };
 
 export default Dashboard;

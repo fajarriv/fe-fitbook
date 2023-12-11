@@ -1,35 +1,43 @@
-// Navbar.js
+import { Flex, Button, Text } from "@chakra-ui/react";
+import Link from "next/link";
 
-import { Box, Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
-
-const Navbar = ({ userName }) => {
+const Navbar = () => {
   return (
-    <Flex as="nav" align="center" justify="space-between" wrap="wrap" padding="1rem" bg="#0C4C4C" color="white">
+    <Flex
+      as="header"
+      position="absolute"
+      top="0"
+      width="full"
+      align="center"
+      justify="space-between"
+      wrap="wrap"
+      padding="1rem"
+      bg="#0C4C4C"
+      color="white"
+      zIndex={1000} // Use a high numeric value for zIndex
+    >
       <Flex align="center" mr={5}>
         <Text fontSize="lg" fontWeight="bold">
           FitBook
         </Text>
       </Flex>
 
-      <Box display={{ base: 'none', md: 'block' }}>
-        <Button variant="ghost" colorScheme="whiteAlpha">
-          Home
-        </Button>
-        {/* ... other navigation buttons */}
-      </Box>
-
-      <Flex alignItems="center">
-        <Menu>
-          <MenuButton as={Button} variant="ghost" colorScheme="whiteAlpha">
-            {userName || 'User'}
-          </MenuButton>
-          <MenuList>
-            <MenuItem onClick={() => /* navigate to /profile */}>Profile</MenuItem>
-            <MenuItem onClick={() => /* navigate to /dashboard */}>Dashboard</MenuItem>
-            <MenuItem onClick={() => /* navigate to /sessions */}>Sessions</MenuItem>
-            <MenuItem onClick={() => /* navigate to /qa */}>Q&A</MenuItem>
-          </MenuList>
-        </Menu>
+      <Flex align="center">
+        <Link href="/dashboard" passHref>
+          <Button as="a" variant="ghost" mr={3}>
+            Dashboard
+          </Button>
+        </Link>
+        <Link href="/daftarKelas" passHref>
+          <Button as="a" variant="ghost" mr={3}>
+            Daftar Kelas
+          </Button>
+        </Link>
+        <Link href="/updateProfile" passHref>
+          <Button as="a" variant="ghost">
+            Update Profile
+          </Button>
+        </Link>
       </Flex>
     </Flex>
   );
