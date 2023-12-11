@@ -4,6 +4,7 @@ import { MdCheckCircle, MdCancel, MdEventAvailable } from "react-icons/md";
 
 const Dashboard = () => {
   // Dummy data for booked classes
+  // later show the schedule also
   const bookedClasses = [
     {
       id: 1,
@@ -49,7 +50,7 @@ const Dashboard = () => {
               shadow="md"
               borderWidth="1px"
               className="rounded-md"
-              bg="white"
+              bg="grey"
             >
               <Text fontSize="p-desktop" fontWeight="500" fontFamily="poppins">
                 {classInfo.name}
