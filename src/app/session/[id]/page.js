@@ -61,34 +61,34 @@ const SessionDetailPage = ({ session }) => {
   );
 };
 
-export async function getServerSideProps({ params }) {
-  // Here we simulate a server-side request with a dummy response
-  // Replace this with your actual fetch call to the backend
-  const dummyResponse = {
-    judul: "Kelas Aerobik Mantap",
-    deskripsi: "Membuat jantung dan badan sehat",
-    trainer: {
-      id: "ae3e25ee-ec54-4bbf-b2a5-e276563d66bd",
-      role: "Trainer",
-      name: "jarip",
-      email: "useraja@gmail.com",
-      displayName: "jaripcoy",
-      noTelp: "021",
-      bio: "halo ini bio",
-      rating: null,
-    },
-    jadwalWaktu: "2023-12-21T19:00:00",
-    lokasi: "JIM TERDEKAT CUY",
-    maxParticipant: 20,
-    currentParticipant: 0,
-    status: "Ongoing",
-  };
+// export async function getServerSideProps({ params }) {
+//   // Here we simulate a server-side request with a dummy response
+//   // Replace this with your actual fetch call to the backend
+//   const dummyResponse = {
+//     judul: "Kelas Aerobik Mantap",
+//     deskripsi: "Membuat jantung dan badan sehat",
+//     trainer: {
+//       id: "ae3e25ee-ec54-4bbf-b2a5-e276563d66bd",
+//       role: "Trainer",
+//       name: "jarip",
+//       email: "useraja@gmail.com",
+//       displayName: "jaripcoy",
+//       noTelp: "021",
+//       bio: "halo ini bio",
+//       rating: null,
+//     },
+//     jadwalWaktu: "2023-12-21T19:00:00",
+//     lokasi: "JIM TERDEKAT CUY",
+//     maxParticipant: 20,
+//     currentParticipant: 0,
+//     status: "Ongoing",
+//   };
 
-  return {
-    props: {
-      session: dummyResponse,
-    },
-  };
-}
+//   return {
+//     props: {
+//       session: dummyResponse,
+//     },
+//   };
+// }
 
 export default SessionDetailPage;
