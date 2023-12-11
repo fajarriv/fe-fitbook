@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 export default function Page() {
   const [daftarKelas, setDaftarKelas] = useState([])
 
+
   useEffect(() => {
     const fetchClass = async () => {
       try {
@@ -51,7 +52,7 @@ export default function Page() {
             key={kelas.id}
             onClick={() => handleCardClick(kelas)}
           >
-            <h2 className="text-xl font-semibold mb-2">{kelas.judul}</h2>
+            <h2 className="text-gray-500 font-semibold mb-2">{kelas.judul}</h2>
             <p className="text-gray-600 mb-2">{kelas.deskripsi}</p>
             <p className="text-gray-500">Jadwal: {kelas.jadwalWaktu}</p>
             <div className="flex justify-between items-center mt-4">
