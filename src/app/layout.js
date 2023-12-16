@@ -1,16 +1,17 @@
-'use client'
-import '@/styles/globals.css'
-import Navbar from '@/components/elements/Navbar'
-import { ChakraProvider } from '@chakra-ui/react'
-
-import { Poppins } from 'next/font/google'
+"use client";
+import "@/styles/globals.css";
+import Navbar from "@/components/elements/Navbar";
+import { ChakraProvider } from "@chakra-ui/react";
+import { AuthContextProvider } from "@/contexts/authContext";
+import { Poppins } from "next/font/google";
+import HydrationHandler from "@/utils/hydrationHandler";
 
 const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  variable: '--font-poppins',
-  display: 'swap',
-})
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-poppins",
+  display: "swap",
+});
 
 // export const metadata = {
 //   title: "Fitbook",
@@ -21,14 +22,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <ChakraProvider>
-          <Navbar />
-          <main className={poppins.className} style={{ paddingTop: '2rem' }}>
-            {children}
-          </main>{' '}
-          {/* Adjust the padding value based on your Navbar's height */}
-        </ChakraProvider>
+        <AuthContextProvider>
+          <HydrationHandler>
+            <ChakraProvider>
+              <Navbar />
+              {children}
+            </ChakraProvider>
+          </HydrationHandler>
+        </AuthContextProvider>
       </body>
     </html>
-  )
+  );
 }
