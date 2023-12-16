@@ -2,8 +2,9 @@
 import "@/styles/globals.css";
 import Navbar from "@/components/elements/Navbar";
 import { ChakraProvider } from "@chakra-ui/react";
-
+import { AuthContextProvider } from "@/contexts/authContext";
 import { Poppins } from "next/font/google";
+import HydrationHandler from "@/utils/hydrationHandler";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -19,12 +20,17 @@ const poppins = Poppins({
 
 export default function RootLayout({ children }) {
   return (
-    <ChakraProvider>
-      <Navbar />
-      <main className={poppins.className} style={{ paddingTop: "2rem" }}>
-        {children}
-      </main>{" "}
-      {/* Adjust the padding value based on your Navbar's height */}
-    </ChakraProvider>
+    <html lang="en">
+      <body className={poppins.className}>
+        <AuthContextProvider>
+          <HydrationHandler>
+            <ChakraProvider>
+              <Navbar />
+              {children}
+            </ChakraProvider>
+          </HydrationHandler>
+        </AuthContextProvider>
+      </body>
+    </html>
   );
 }

@@ -1,14 +1,17 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { useRouter, useParams } from 'next/navigation'
+import { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
 const DetailKelas = ({ id }) => {
-  const router = useRouter()
-  const params = useParams()
-  const [kelasDetail, setKelasDetail] = useState()
+  const router = useRouter();
+  const params = useParams();
+  const [kelasDetail, setKelasDetail] = useState();
+  const [showModal, setShowModal] = useState(false);
+  const [showAskQuestion, setShowAskQuestion] = useState(false);
+  const [question, setQuestion] = useState('');
+  const [submittedQuestions, setSubmittedQuestions] = useState([]);
 
   useEffect(() => {
-    console.log(id)
+    console.log(id);
     const fetchKelasDetail = async () => {
       try {
         const responseData = {
@@ -35,27 +38,39 @@ const DetailKelas = ({ id }) => {
           },
           status: 'OK',
           message: 'success',
-        }
+        };
 
-        setKelasDetail(responseData.data)
-        console.log(kelasDetail)
+        setKelasDetail(responseData.data);
       } catch (error) {
-        console.error('Error fetching class detail:', error)
+        console.error('Error fetching class detail:', error);
       }
-    }
+    };
 
-    fetchKelasDetail()
-  }, [])
+    fetchKelasDetail();
+  }, []);
 
-  const [showModal, setShowModal] = useState(false)
-  const openModal = () => setShowModal(true)
-  const closeModal = () => setShowModal(false)
+  const openModal = () => setShowModal(true);
+  const closeModal = () => setShowModal(false);
+
+  const toggleAskQuestion = () => {
+    setShowAskQuestion(!showAskQuestion);
+  };
+
+  const handleQuestionChange = (event) => {
+    setQuestion(event.target.value);
+  };
+
+  const submitQuestion = () => {
+    setSubmittedQuestions([...submittedQuestions, question]);
+    setQuestion('');
+    setShowAskQuestion(false);
+  };
 
   return (
     <div className="container mx-auto mt-10 px-4">
       <h1 className="text-3xl font-bold mb-4">{kelasDetail?.judul}</h1>
       <p className="text-lg mb-4">{kelasDetail?.deskripsi}</p>
-      
+
       <div className="mt-6">
         <h2 className="text-2xl font-bold mb-2">Class Details</h2>
         <p className="text-lg">
@@ -79,11 +94,11 @@ const DetailKelas = ({ id }) => {
           {kelasDetail?.status}
         </p>
         <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={openModal}
-      >
-        Lihat Profil Trainer
-      </button>
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={openModal}
+        >
+          Lihat Profil Trainer
+        </button>
       </div>
 
       {showModal && (
@@ -92,34 +107,19 @@ const DetailKelas = ({ id }) => {
             <div className="fixed inset-0 transition-opacity">
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
-            <span
-              className="hidden sm:inline-block sm:align-middle sm:h-screen"
-              aria-hidden="true"
-            >
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
               &#8203;
             </span>
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="text-center sm:text-left">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-                      Trainer Details
-                    </h3>
-                    <p className="text-sm text-gray-500 mb-2">
-                      Trainer Name: {kelasDetail?.trainer.name}
-                    </p>
-                    <p className="text-sm text-gray-500 mb-2">
-                      Email: {kelasDetail?.trainer.email}
-                    </p>
-                    <p className="text-sm text-gray-500 mb-2">
-                      Bio: {kelasDetail?.trainer.bio}
-                    </p>
-                    <p className="text-sm text-gray-500 mb-2">
-                      No Telpon: {kelasDetail?.trainer.noTelp}
-                    </p>
-                    <p className="text-sm text-gray-500 mb-2">
-                      Rating: {kelasDetail?.trainer.rating}
-                    </p>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Trainer Details</h3>
+                    <p className="text-sm text-gray-500 mb-2">Trainer Name: {kelasDetail?.trainer.name}</p>
+                    <p className="text-sm text-gray-500 mb-2">Email: {kelasDetail?.trainer.email}</p>
+                    <p className="text-sm text-gray-500 mb-2">Bio: {kelasDetail?.trainer.bio}</p>
+                    <p className="text-sm text-gray-500 mb-2">No Telpon: {kelasDetail?.trainer.noTelp}</p>
+                    <p className="text-sm text-gray-500 mb-2">Rating: {kelasDetail?.trainer.rating}</p>
                   </div>
                 </div>
               </div>
@@ -135,8 +135,41 @@ const DetailKelas = ({ id }) => {
           </div>
         </div>
       )}
-    </div>
-  )
-}
 
-export default DetailKelas
+      <button
+        className="bg-blue-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
+        onClick={toggleAskQuestion}
+      >
+        {showAskQuestion ? 'Close Ask Question' : 'Ask a Question'}
+      </button>
+
+      {showAskQuestion && (
+        <div className="mt-4">
+          <textarea
+            className="w-full p-2 border border-gray-300 rounded"
+            value={question}
+            onChange={handleQuestionChange}
+            placeholder="Type your question here"
+          />
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
+            onClick={submitQuestion}
+          >
+            Submit Question
+          </button>
+        </div>
+      )}
+    
+      <div className="mt-6" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+        <h2 className="text-2xl font-bold mb-2">Submitted Questions</h2>
+        {submittedQuestions.map((q, index) => (
+          <p key={index} className="text-lg mt-2">
+            {q}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default DetailKelas;
