@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import useFetchWithToken from "@/hooks/fetchWithToken";
 import { useRouter } from "next/navigation";

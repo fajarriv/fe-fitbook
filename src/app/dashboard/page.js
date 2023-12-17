@@ -12,7 +12,7 @@ const Dashboard = () => {
   let DashboardComponent;
 
   switch (userRole) {
-    case "Client":
+    case "User":
       DashboardComponent = ClientDashboard;
       break;
     case "Trainer":
