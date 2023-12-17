@@ -1,6 +1,6 @@
 // "use client";
 import "@/styles/globals.css";
-import Navbar from "@/components/elements/Navbar";
+import {Navbar} from "@/components/Navbar";
 import { ChakraProvider } from "@chakra-ui/react";
 import { AuthContextProvider } from "@/contexts";
 import { Poppins } from "next/font/google";

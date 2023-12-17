@@ -56,6 +56,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     if (getPenggunaToken()) {
       setPenggunaData();
+      setIsAuthenticated(true);
     } else {
       setPengguna(undefined);
       setIsAuthenticated(false);
