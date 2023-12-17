@@ -1,8 +1,10 @@
 "use client";
+import { useCustomToast } from "@/components/elements/Toast";
 import { useToken } from "@/hooks/useToken";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 /**
  * @typedef {Object} Pengguna
@@ -39,6 +41,8 @@ export const AuthContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
+  const { showToast } = useCustomToast("auth");
+
   const { setPenggunaToken, removePenggunaToken, getPenggunaToken } =
     useToken();
 
@@ -54,6 +58,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     if (getPenggunaToken()) {
       setPenggunaData();
+      setIsAuthenticated(true);
     } else {
       setPengguna(undefined);
       setIsAuthenticated(false);
@@ -73,22 +78,30 @@ export const AuthContextProvider = ({ children }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        cache: "no-store",
         method: "POST",
       });
-      const data = await response.json();
-      const token = data.token;
 
-      if (response.ok) {
-        setPenggunaToken(token);
-        setIsAuthenticated(true);
-        setPenggunaData(); // Make sure to decode and set user data
-        router.push("/dashboard");
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.log(data.message);
+        throw new Error(`${data.message}`);
       }
 
-      // handle notif success
+      const token = data.token;
+      setPenggunaToken(token);
+      setIsAuthenticated(true);
+
+      showToast({
+        type: "success",
+        message: "Login Success, Welcome Back!",
+      });
     } catch (error) {
-      console.log(error);
-      // handle error
+      showToast({
+        type: "error",
+        message: error.message,
+      });
     }
   };
 
@@ -122,11 +135,27 @@ export const AuthContextProvider = ({ children }) => {
         body: JSON.stringify(reqBody),
         method: "POST",
       });
-      const token = response.data.data;
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.log(data.message);
+        throw new Error(`${data.message}`);
+      }
+
+      const token = data.data;
       setPenggunaToken(token);
       setIsAuthenticated(true);
+
+      showToast({
+        type: "success",
+        message: "Welcome To FitBook!",
+      });
     } catch (error) {
-      // handle error
+      showToast({
+        type: "error",
+        message: error.message,
+      });
     }
   };
 
