@@ -93,6 +93,7 @@ export const AuthContextProvider = ({ children }) => {
       setPenggunaToken(token);
       setIsAuthenticated(true);
 
+      router.replace("/");
       showToast({
         type: "success",
         message: "Login Success, Welcome Back!",
@@ -151,6 +152,7 @@ export const AuthContextProvider = ({ children }) => {
         type: "success",
         message: "Welcome To FitBook!",
       });
+      router.replace("/");
     } catch (error) {
       showToast({
         type: "error",
