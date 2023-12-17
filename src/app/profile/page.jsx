@@ -2,15 +2,18 @@
 import { useEffect, useState } from 'react'
 import { useAuthContext } from '@/contexts/authContext'
 import { useToken } from '@/hooks/useToken'
+import { useRouter } from 'next/navigation'
+import { Box, Button, Container, Heading, Text } from '@chakra-ui/react'
 
 export default function Profile() {
   const { pengguna } = useAuthContext()
   const { getPenggunaToken } = useToken()
   const [userData, setUserData] = useState(null)
+  const router = useRouter()
 
   useEffect(() => {
     let role = ''
-    if(pengguna.role == 'Trainer'){
+    if (pengguna.role == 'Trainer') {
       role = 'trainer'
     } else {
       role = 'user'
@@ -29,7 +32,7 @@ export default function Profile() {
           }
         )
         if (response.ok) {
-          console.log("response ok")
+          console.log('response ok')
           const data = await response.json()
           console.log(data.data)
           setUserData(data.data)
@@ -46,18 +49,34 @@ export default function Profile() {
     }
   }, [])
 
+  const handleRedirectToUpdateProfile = () => {
+    router.push('/updateProfile')
+  }
+
   return (
-    <div className="container mx-auto mt-10">
-      <h1 className="text-3xl font-bold mb-5">Profile</h1>
-      <div className="bg-white shadow-md rounded-lg p-4">
-        <p>ID: {userData?.id}</p>
-        <p>Role: {userData?.role}</p>
-        <p>Name: {userData?.name}</p>
-        <p>Email: {userData?.email}</p>
-        <p>Display Name: {userData?.displayName}</p>
-        <p>Phone Number: {userData?.noTelp}</p>
-        {userData?.role === 'Trainer' && <p>Bio: {userData?.bio}</p>}
-        {userData?.role === 'Trainer' && <p>Rating: {userData?.rating}</p>}
+    <div className="flex justify-center flex-col my-5 w-1/2 animate__animated animate__fadeInUp">
+      <h2 className="text-3xl font-bold mb-5 mt-24">Profile</h2>
+      <div className="shadow w-full rounded bg-white p-8">
+        <Text>Role: {userData?.role}</Text>
+        <Text>Name: {userData?.name}</Text>
+        <Text>Email: {userData?.email}</Text>
+        <Text>Display Name: {userData?.displayName}</Text>
+        <Text>Phone Number: {userData?.noTelp}</Text>
+        {userData?.role === 'Trainer' && <Text>Bio: {userData?.bio}</Text>}
+        {userData?.role === 'Trainer' && (
+          <Text>Rating: {userData?.rating}</Text>
+        )}
+
+        <Button
+          onClick={handleRedirectToUpdateProfile}
+          mt="4"
+          colorScheme="blue"
+          variant="solid"
+          size="md"
+          borderRadius="md"
+        >
+          Update Profile
+        </Button>
       </div>
     </div>
   )
