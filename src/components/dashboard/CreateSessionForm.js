@@ -9,14 +9,15 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import useFetchWithToken from "@/hooks/fetchWithToken";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const CreateSessionForm = ({ onClose }) => {
   const fetchWithToken = useFetchWithToken();
   const router = useRouter();
+  const pathName = usePathname();
 
   const refreshData = () => {
-    router.refresh();
+    router.replace(pathName);
   };
 
   const [formData, setFormData] = useState({
@@ -54,7 +55,7 @@ const CreateSessionForm = ({ onClose }) => {
         toast({
           title: "Class created successfully.",
           status: "success",
-          duration: 5000,
+          duration: 2500,
           isClosable: true,
           onCloseComplete: refreshData,
         });

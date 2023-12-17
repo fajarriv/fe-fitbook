@@ -17,19 +17,19 @@ const DetailKelas = ({ id }) => {
 
   useEffect(() => {
     const fetchKelasDetail = async () => {
-      if (id) {
+      try {
         try {
-          const response = await fetchWithToken(
-            `${process.env.NEXT_PUBLIC_API_URL}/sesi-kelas/${id}`
-          );
-          if (!response.ok) {
-            throw new Error("Failed to fetch class details");
+          if (id) {
+            const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/sesi-kelas/${id}`;
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            setKelasDetail(data.data);
           }
-          const data = await response.json();
-          setKelasDetail(data.data);
         } catch (error) {
-          console.error("Error fetching class detail:", error);
+          console.error('Error fetching class detail:', error);
         }
+      } catch (error) {
+        console.error('Error fetching class detail:', error);
       }
     };
 
