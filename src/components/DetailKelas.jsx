@@ -60,10 +60,37 @@ const DetailKelas = ({ id }) => {
     setQuestion(event.target.value);
   };
 
-  const submitQuestion = () => {
+  const submitQuestion = async () => {
+    // try {
+    //   const payload = {
+    //     pertanyaan: question,
+    //     sesiKelasId: id, 
+    //   };
+
+    //   const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/create-pertanyaan`;
+    //   const response = await fetch(apiUrl, {
+    //     method: "POST",
+    //     headers: {
+    //       "Authorization": `Bearer ${getPenggunaToken()}`,
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(payload),
+    //   });
+
+    //   if (response.ok) {
+    //     console.log("Question submitted successfully");
+    //     setSubmittedQuestions([...submittedQuestions, question]);
+    //     setQuestion("");
+    //     setShowAskQuestion(false);
+    //   } else {
+    //     console.error("Failed to submit question");
+    //   }
+    // } catch (error) {
+    //   console.error("Error submitting question:", error);
+    // }
     setSubmittedQuestions([...submittedQuestions, question]);
-    setQuestion("");
-    setShowAskQuestion(false);
+        setQuestion("");
+        setShowAskQuestion(false);
   };
 
   return (
