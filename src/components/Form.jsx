@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react'
-import { Button, Input } from '@chakra-ui/react'
+import { Button, Input, Select } from '@chakra-ui/react'
+import { useAuthContext } from '@/contexts/authContext'
+import { useRouter } from 'next/navigation'
 
 export default function Form({
   title,
@@ -9,6 +11,7 @@ export default function Form({
   signLink,
   signHref,
 }) {
+  const { register } = useAuthContext()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -16,53 +19,71 @@ export default function Form({
   const [displayName, setDisplayName] = useState('')
   const [role, setRole] = useState('')
   const [bio, setBio] = useState('')
+  const router = useRouter()
 
   const registerHandler = async (e) => {
     e.preventDefault()
     try {
-      const userData = {
-        name: name,
-        email: email,
-        password: password,
-        noTelp: noTelp,
-        displayName: displayName,
-        role: role,
-        bio: bio,
+      let userData = {
+        name,
+        email,
+        password,
+        noTelp,
+        displayName,
+        role,
       }
-      // register ke api backend
+
+      if (role === 'Trainer') {
+        userData = {
+          ...userData,
+          bio,
+        }
+        await register(name, email, password, noTelp, displayName, role, bio)
+      } else {
+        await register(name, email, password, noTelp, displayName, role)
+      }
+
+      
+      router.push('/dashboard')
+      console.log(userData)
     } catch (error) {
-      setError('Registration failed. Please check your information.')
-    } 
+      console.error(
+        'Registration failed. Please check your information.',
+        error
+      )
+    }
   }
 
- 
+  const handleRoleChange = (value) => {
+    setRole(value)
+    if (value !== 'Trainer') {
+      setBio('')
+    }
+  }
+
   return (
-    <div className="w-full bg-white rounded-lg shadow dark:shadow md:mt-0 sm:max-w-md xl:p-0 dark:bg-black dark:shadow-gray-950">
+    <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
       <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
           {title}
         </h1>
-       
-        <form
-          className="space-y-4 md:space-y-6"
-          onSubmit={title === 'Sign Up' ? registerHandler : registerHandler}
-        >
-          {title === 'Sign Up' && (
-            <Input
-              className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              id="username"
-              isRequired
-              label="Username"
-              labelPlacement="outside"
-              name="username"
-              onChange={(e) => setName(e.target.value)}
-              placeholder="username"
-              type="username"
-              value={name}
-            />
-          )}
+
+        <form className="space-y-4 md:space-y-6" onSubmit={registerHandler}>
           <Input
-            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+            id="username"
+            isRequired
+            label="Username"
+            labelPlacement="outside"
+            name="username"
+            onChange={(e) => setName(e.target.value)}
+            placeholder="username"
+            type="username"
+            value={name}
+          />
+
+          <Input
+            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
             id="email"
             isRequired
             label="Email Address"
@@ -74,7 +95,7 @@ export default function Form({
             value={email}
           />
           <Input
-            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
             id="password"
             isRequired
             label="Password"
@@ -85,8 +106,8 @@ export default function Form({
             type="password"
             value={password}
           />
-                    <Input
-            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          <Input
+            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
             id="noTelp"
             isRequired
             label="Phone Number"
@@ -98,7 +119,7 @@ export default function Form({
             value={noTelp}
           />
           <Input
-            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
             id="displayName"
             isRequired
             label="Display Name"
@@ -109,45 +130,35 @@ export default function Form({
             type="text"
             value={displayName}
           />
-          <Input
-            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            id="role"
-            isRequired
-            label="Role"
-            labelPlacement="outside"
-            name="role"
-            onChange={(e) => setRole(e.target.value)}
-            placeholder="Your Role"
-            type="text"
+          <Select
+            placeholder="Select Role"
             value={role}
-          />
-          <Input
-            className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-transparent dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            id="bio"
-            isRequired
-            label="Bio"
-            labelPlacement="outside"
-            name="bio"
-            onChange={(e) => setBio(e.target.value)}
-            placeholder="Your Bio"
-            type="text"
-            value={bio}
-          />
-        
-          <Button
-            color="primary"
-            onClick={(e) => {
-              e.preventDefault()
-              title === 'Sign Up' ? registerHandler(e) : loginHandler(e)
-            }}
+            onChange={(e) => handleRoleChange(e.target.value)}
           >
+            <option value="User">User</option>
+            <option value="Trainer">Trainer</option>
+            <option value="Admin">Admin</option>
+          </Select>
+          {role === 'Trainer' && (
+            <Input
+              className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              id="bio"
+              label="Bio"
+              labelPlacement="outside"
+              name="bio"
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="Your Bio"
+              type="text"
+              value={bio}
+            />
+          )}
+          <Button color="primary" onClick={registerHandler}>
             {buttonText}
           </Button>
-
-          <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+          <p className="text-sm font-light text-gray-500">
             {signText}
             <a
-              className="dark:text-primary-500 font-medium hover:underline text-primary-600"
+              className="font-medium text-primary-600 hover:underline"
               href={signHref}
             >
               {signLink}

@@ -11,35 +11,18 @@ export default function Page() {
   useEffect(() => {
     const fetchClass = async () => {
       try {
-        // ini tembak api
-        const hardcodedData = [
-          {
-            id: '04eef712-19d1-484a-8076-668626d820c8',
-            judul: 'Kelas Aerobik Mantap',
-            deskripsi: 'Membuat jantung dan badan sehat',
-            jadwalWaktu: '21-12-2023 19:00',
-            maxParticipant: 20,
-            currentParticipant: 0,
-          },
-          {
-            id: '098b8650-e088-4458-b60c-5fec0e7e67e5',
-            judul: 'Kelas Aerobik Mantap',
-            deskripsi: 'Membuat jantung dan badan sehat',
-            jadwalWaktu: '21-12-2023 21:00',
-            maxParticipant: 20,
-            currentParticipant: 0,
-          },
-        ]
-
-        setDaftarKelas(hardcodedData)
-        console.log(daftarKelas)
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/sesi-kelas`;
+        const response = await fetch(apiUrl);
+        
+        const data = await response.json();
+        setDaftarKelas(data.data);
       } catch (error) {
-        console.error('Error fetching users:', error)
+        console.error('Error fetching data:', error);
       }
-    }
+    };
 
     fetchClass()
-  }, [daftarKelas])
+  }, [])
 
   const handleCardClick = (kelas) => {
     // redirect ke detail kelas
