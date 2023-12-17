@@ -52,9 +52,7 @@ const LoginForm = () => {
         width={{ base: "90%", sm: "480px" }} // Adjusted for responsive width
       >
         <Stack spacing={4}>
-          <Text fontSize="2xl" textAlign="center">
-            Login
-          </Text>
+          <p className="text-center text-3xl">Login</p>
           <FormControl isInvalid={!!errors.username}>
             <Input
               placeholder="Username"

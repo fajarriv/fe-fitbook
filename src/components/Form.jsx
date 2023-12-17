@@ -1,8 +1,8 @@
-'use client'
-import { useState } from 'react'
-import { Button, Input, Select } from '@chakra-ui/react'
-import { useAuthContext } from '@/contexts/authContext'
-import { useRouter } from 'next/navigation'
+"use client";
+import { useState } from "react";
+import { Button, Input, Select } from "@chakra-ui/react";
+import { useAuthContext } from "@/contexts/authContext";
+import { useRouter } from "next/navigation";
 
 export default function Form({
   title,
@@ -11,18 +11,18 @@ export default function Form({
   signLink,
   signHref,
 }) {
-  const { register } = useAuthContext()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [noTelp, setNoTelp] = useState('')
-  const [displayName, setDisplayName] = useState('')
-  const [role, setRole] = useState('')
-  const [bio, setBio] = useState('')
-  const router = useRouter()
+  const { register } = useAuthContext();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [noTelp, setNoTelp] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [role, setRole] = useState("");
+  const [bio, setBio] = useState("");
+  const router = useRouter();
 
   const registerHandler = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       let userData = {
         name,
@@ -31,35 +31,34 @@ export default function Form({
         noTelp,
         displayName,
         role,
-      }
+      };
 
-      if (role === 'Trainer') {
+      if (role === "Trainer") {
         userData = {
           ...userData,
           bio,
-        }
-        await register(name, email, password, noTelp, displayName, role, bio)
+        };
+        await register(name, email, password, noTelp, displayName, role, bio);
       } else {
-        await register(name, email, password, noTelp, displayName, role)
+        await register(name, email, password, noTelp, displayName, role);
       }
 
-      
-      router.push('/dashboard')
-      console.log(userData)
+      router.push("/dashboard");
+      console.log(userData);
     } catch (error) {
       console.error(
-        'Registration failed. Please check your information.',
+        "Registration failed. Please check your information.",
         error
-      )
+      );
     }
-  }
+  };
 
   const handleRoleChange = (value) => {
-    setRole(value)
-    if (value !== 'Trainer') {
-      setBio('')
+    setRole(value);
+    if (value !== "Trainer") {
+      setBio("");
     }
-  }
+  };
 
   return (
     <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
@@ -68,7 +67,10 @@ export default function Form({
           {title}
         </h1>
 
-        <form className="space-y-4 md:space-y-6" onSubmit={registerHandler}>
+        <form
+          className="space-y-4 md:space-y-6"
+          onSubmit={registerHandler}
+        >
           <Input
             className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
             id="username"
@@ -139,7 +141,7 @@ export default function Form({
             <option value="Trainer">Trainer</option>
             <option value="Admin">Admin</option>
           </Select>
-          {role === 'Trainer' && (
+          {role === "Trainer" && (
             <Input
               className="bg-gray-50 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
               id="bio"
@@ -152,9 +154,12 @@ export default function Form({
               value={bio}
             />
           )}
-          <Button color="primary" onClick={registerHandler}>
+          <button
+            className="w-full font-semibold hover:bg-darkcream hover:text-orange bg-orange text-darkcream p-2 rounded-lg"
+            onClick={registerHandler}
+          >
             {buttonText}
-          </Button>
+          </button>
           <p className="text-sm font-light text-gray-500">
             {signText}
             <a
@@ -167,5 +172,5 @@ export default function Form({
         </form>
       </div>
     </div>
-  )
+  );
 }
