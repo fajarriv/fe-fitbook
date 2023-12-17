@@ -11,7 +11,7 @@ export const Navbar = () => {
   console.log(pengguna);
   const pathname = usePathname();
   return (
-    <nav className="z-[50] bg-green sticky w-full top-0">
+    <nav className="z-[50] bg-green sticky w-full top-0 shadow-2xl">
       <div className="px-12 py-5 flex items-center mx-auto">
         <Link href="/">
           <h2 className="text-darkcream">Fitbook</h2>

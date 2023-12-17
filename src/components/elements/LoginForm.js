@@ -91,15 +91,12 @@ const LoginForm = () => {
               {errors.password && errors.password.message}
             </FormErrorMessage>
           </FormControl>
-          <Button
-            colorScheme="blue"
-            isLoading={isSubmitting}
-            type="submit"
+          <button
+            className="w-full font-semibold hover:bg-darkcream hover:text-orange bg-orange text-darkcream p-2 rounded-lg"
             onClick={() => login(email, password)}
-            width="full"
           >
             Login
-          </Button>
+          </button>
         </Stack>
       </Box>
     </Box>

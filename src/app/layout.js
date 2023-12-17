@@ -6,6 +6,7 @@ import { AuthContextProvider } from "@/contexts";
 import { Poppins } from "next/font/google";
 import HydrationHandler from "@/utils/hydrationHandler";
 import { Toaster } from "react-hot-toast";
+import { Footer } from "@/components/Footer";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
               <Toaster />
               <Navbar />
               {children}
+              <Footer />
             </ChakraProvider>
           </HydrationHandler>
         </AuthContextProvider>
