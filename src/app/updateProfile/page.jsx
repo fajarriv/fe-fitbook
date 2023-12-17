@@ -95,6 +95,10 @@ export default function UpdateProfilePage() {
     }
   }
 
+  const handleRedirectToProfile = () => {
+    router.push('/profile')
+  }
+
   return (
     <div className="flex justify-center flex-col my-5 w-1/2 animate__animated animate__fadeInUp">
       <h2 className="text-3xl font-bold mb-5 mt-24">Update Profile</h2>
@@ -158,6 +162,12 @@ export default function UpdateProfilePage() {
             Update
           </Button>
         </form>
+        <Button
+          onClick={handleRedirectToProfile}
+          color="primary"
+        >
+          Cancel
+        </Button>
       </div>
     </div>
   )
