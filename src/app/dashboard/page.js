@@ -2,7 +2,6 @@
 import React from "react";
 import ClientDashboard from "@/components/dashboard/ClientDashboard";
 import TrainerDashboard from "@/components/dashboard/TrainerDashboard";
-import RootLayout from "../layout";
 import { useAuthContext } from "@/contexts/authContext";
 
 const Dashboard = () => {
@@ -26,11 +25,7 @@ const Dashboard = () => {
       DashboardComponent = () => <div>Unauthorized</div>;
   }
 
-  return (
-    <RootLayout>
-      <DashboardComponent />
-    </RootLayout>
-  );
+  return <DashboardComponent />;
 };
 
 export default Dashboard;
