@@ -44,6 +44,14 @@ module.exports = {
           "14px",
           { lineHeight: "20px", letterSpacing: "0.25px", fontWeight: "500" },
         ],
+        "lg-desktop": [
+          "22px",
+          { lineHeight: "28px", letterSpacing: "0", fontWeight: "700" },
+        ],
+        "lg-mobile": [
+          "14px",
+          { lineHeight: "24px", letterSpacing: "+0.5px", fontWeight: "700" },
+        ],
       },
       colors: {
         black: "#0C0404",
@@ -59,7 +67,7 @@ module.exports = {
         error: "#BF0835",
         warning: "#F4AD43",
         disabled: "#79747E",
-      },     
+      },
     },
   },
   plugins: [],

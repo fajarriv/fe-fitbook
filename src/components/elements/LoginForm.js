@@ -52,10 +52,7 @@ const LoginForm = () => {
         width={{ base: "90%", sm: "480px" }} // Adjusted for responsive width
       >
         <Stack spacing={4}>
-          <Text
-            fontSize="2xl"
-            textAlign="center"
-          >
+          <Text fontSize="2xl" textAlign="center">
             Login
           </Text>
           <FormControl isInvalid={!!errors.username}>
@@ -91,15 +88,12 @@ const LoginForm = () => {
               {errors.password && errors.password.message}
             </FormErrorMessage>
           </FormControl>
-          <Button
-            colorScheme="blue"
-            isLoading={isSubmitting}
-            type="submit"
+          <button
+            className="w-full font-semibold hover:bg-darkcream hover:text-orange bg-orange text-darkcream p-2 rounded-lg"
             onClick={() => login(email, password)}
-            width="full"
           >
             Login
-          </Button>
+          </button>
         </Stack>
       </Box>
     </Box>

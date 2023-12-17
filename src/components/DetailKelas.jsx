@@ -1,17 +1,21 @@
-import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+"use client";
+import { useEffect, useState } from "react";
+import useFetchWithToken from "@/hooks/fetchWithToken";
+import { useRouter } from "next/navigation";
 
 const DetailKelas = ({ id }) => {
   const router = useRouter();
-  const params = useParams();
-  const [kelasDetail, setKelasDetail] = useState();
   const [showModal, setShowModal] = useState(false);
+  const fetchWithToken = useFetchWithToken();
+  const [kelasDetail, setKelasDetail] = useState();
   const [showAskQuestion, setShowAskQuestion] = useState(false);
-  const [question, setQuestion] = useState('');
+  const [question, setQuestion] = useState("");
   const [submittedQuestions, setSubmittedQuestions] = useState([]);
+  const goBack = () => {
+    router.back();
+  };
 
   useEffect(() => {
-    console.log(id);
     const fetchKelasDetail = async () => {
       try {
         try {
@@ -30,8 +34,14 @@ const DetailKelas = ({ id }) => {
     };
 
     fetchKelasDetail();
-  }, []);
+  }, [id]);
 
+  useEffect(() => {
+    // When the component unmounts
+    return () => {
+      closeModal();
+    };
+  }, []);
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
@@ -45,12 +55,18 @@ const DetailKelas = ({ id }) => {
 
   const submitQuestion = () => {
     setSubmittedQuestions([...submittedQuestions, question]);
-    setQuestion('');
+    setQuestion("");
     setShowAskQuestion(false);
   };
 
   return (
     <div className="container mx-auto mt-10 px-4">
+      <button
+        onClick={goBack}
+        className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mb-4"
+      >
+        Back to Dashboard
+      </button>
       <h1 className="text-3xl font-bold mb-4">{kelasDetail?.judul}</h1>
       <p className="text-lg mb-4">{kelasDetail?.deskripsi}</p>
 
@@ -65,12 +81,8 @@ const DetailKelas = ({ id }) => {
           {kelasDetail?.lokasi}
         </p>
         <p className="text-lg">
-          <span className="font-bold">Max Participants: </span>
-          {kelasDetail?.maxParticipant}
-        </p>
-        <p className="text-lg">
-          <span className="font-bold">Current Participants: </span>
-          {kelasDetail?.currentParticipant}
+          <span className="font-bold">Participants: </span>
+          {kelasDetail?.currentParticipant} / {kelasDetail?.maxParticipant}
         </p>
         <p className="text-lg">
           <span className="font-bold">Status: </span>
@@ -85,24 +97,39 @@ const DetailKelas = ({ id }) => {
       </div>
 
       {showModal && (
-        <div className="fixed z-10 inset-0 overflow-y-auto">
+        <div key="modal" className="fixed z-10 inset-0 overflow-y-auto">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 transition-opacity">
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
               &#8203;
             </span>
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="text-center sm:text-left">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Trainer Details</h3>
-                    <p className="text-sm text-gray-500 mb-2">Trainer Name: {kelasDetail?.trainer.name}</p>
-                    <p className="text-sm text-gray-500 mb-2">Email: {kelasDetail?.trainer.email}</p>
-                    <p className="text-sm text-gray-500 mb-2">Bio: {kelasDetail?.trainer.bio}</p>
-                    <p className="text-sm text-gray-500 mb-2">No Telpon: {kelasDetail?.trainer.noTelp}</p>
-                    <p className="text-sm text-gray-500 mb-2">Rating: {kelasDetail?.trainer.rating}</p>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+                      Trainer Details
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-2">
+                      Trainer Name: {kelasDetail?.trainer.name}
+                    </p>
+                    <p className="text-sm text-gray-500 mb-2">
+                      Email: {kelasDetail?.trainer.email}
+                    </p>
+                    <p className="text-sm text-gray-500 mb-2">
+                      Bio: {kelasDetail?.trainer.bio}
+                    </p>
+                    <p className="text-sm text-gray-500 mb-2">
+                      No Telpon: {kelasDetail?.trainer.noTelp}
+                    </p>
+                    <p className="text-sm text-gray-500 mb-2">
+                      Rating: {kelasDetail?.trainer.rating}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -123,7 +150,7 @@ const DetailKelas = ({ id }) => {
         className="bg-blue-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4"
         onClick={toggleAskQuestion}
       >
-        {showAskQuestion ? 'Close Ask Question' : 'Ask a Question'}
+        {showAskQuestion ? "Close Ask Question" : "Ask a Question"}
       </button>
 
       {showAskQuestion && (
@@ -142,8 +169,8 @@ const DetailKelas = ({ id }) => {
           </button>
         </div>
       )}
-    
-      <div className="mt-6" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+
+      <div className="mt-6" style={{ maxHeight: "200px", overflowY: "auto" }}>
         <h2 className="text-2xl font-bold mb-2">Submitted Questions</h2>
         {submittedQuestions.map((q, index) => (
           <p key={index} className="text-lg mt-2">
