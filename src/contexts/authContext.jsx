@@ -1,6 +1,7 @@
 "use client";
 import { useToken } from "@/hooks/useToken";
 import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 /**
@@ -36,6 +37,7 @@ const AuthContext = createContext({});
 export const AuthContextProvider = ({ children }) => {
   const [pengguna, setPengguna] = useState();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
 
   const { setPenggunaToken, removePenggunaToken, getPenggunaToken } =
     useToken();
@@ -67,7 +69,7 @@ export const AuthContextProvider = ({ children }) => {
     try {
       const response = await fetch(`${baseUrl}/login`, {
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
@@ -76,8 +78,12 @@ export const AuthContextProvider = ({ children }) => {
       const data = await response.json();
       const token = data.token;
 
-      setPenggunaToken(token);
-      setIsAuthenticated(true);
+      if (response.ok) {
+        setPenggunaToken(token);
+        setIsAuthenticated(true);
+        setPenggunaData(); // Make sure to decode and set user data
+        router.push("/dashboard");
+      }
 
       // handle notif success
     } catch (error) {
@@ -110,7 +116,7 @@ export const AuthContextProvider = ({ children }) => {
 
       const response = await fetch(`${baseUrl}/register`, {
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(reqBody),
