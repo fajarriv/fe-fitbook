@@ -4,12 +4,7 @@ import { useToken } from "@/hooks/useToken";
 const useFetchWithToken = () => {
   const { getPenggunaToken } = useToken();
 
-  const fetchWithToken = async (
-    url,
-    method = "GET",
-    body = null,
-    options = {}
-  ) => {
+  const fetchWithToken = async (url, method = 'GET', body = null, options = {}) => {
     const token = getPenggunaToken();
 
     const headers = new Headers(options.headers || {});
