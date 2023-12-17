@@ -1,46 +1,40 @@
-import React from "react";
-import { Box, Flex, Text, Button, SimpleGrid, Icon } from "@chakra-ui/react";
-import { MdCheckCircle, MdCancel, MdEventAvailable } from "react-icons/md";
-
-// fix ui
+"use client";
+import React, { useState, useEffect } from "react";
+import { Box, Flex, Text, Button, SimpleGrid, Select } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
+import useFetchWithToken from "@/hooks/fetchWithToken";
 
 const TrainerDashboard = () => {
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "ongoing":
-        return <Icon as={MdEventAvailable} color="green.500" />;
-      case "completed":
-        return <Icon as={MdCheckCircle} color="blue.500" />;
-      case "cancelled":
-        return <Icon as={MdCancel} color="red.500" />;
-      default:
-        return null;
-    }
+  const [status, setStatus] = useState("Ongoing");
+  const [classes, setClasses] = useState([]);
+  const router = useRouter();
+
+  const fetchWithToken = useFetchWithToken();
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await fetchWithToken(
+          `${process.env.NEXT_PUBLIC_API_URL}/trainer/sesi-kelas/${status}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch classes");
+        }
+        const data = await response.json();
+        setClasses(data.data || []);
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+      }
+    };
+
+    fetchClasses();
+  }, [status]);
+
+  const viewDetails = (classId) => {
+    router.push(`detailKelas/${classId}`);
   };
 
-  const classes = [
-    {
-      id: 1,
-      name: "Yoga Beginners",
-      status: "ongoing",
-      schedule: "Mon & Wed at 10 AM",
-    },
-    {
-      id: 2,
-      name: "Pilates Intermediate",
-      status: "completed",
-      schedule: "Tue & Thu at 5 PM",
-    },
-    {
-      id: 3,
-      name: "HIIT Advanced",
-      status: "cancelled",
-      schedule: "Sat at 8 AM",
-    },
-  ];
-
   return (
-    <Box bg="cream" minH="100vh" p={5}>
+    <Box bg="cream" minH="100vh" p={5} paddingTop={20}>
       <Flex flexDirection="column" alignItems="center">
         <Text
           fontSize="h2-desktop"
@@ -50,6 +44,16 @@ const TrainerDashboard = () => {
         >
           Trainer Dashboard
         </Text>
+        <Select
+          onChange={(e) => setStatus(e.target.value)}
+          placeholder="Select status"
+          mt={5}
+          width="auto"
+        >
+          <option value="Ongoing">Ongoing</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+        </Select>
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10} mt={10}>
           {classes.map((classInfo) => (
             <Box
@@ -57,26 +61,30 @@ const TrainerDashboard = () => {
               p={5}
               shadow="md"
               borderWidth="1px"
-              bg="grey"
+              bg="white"
               rounded="md"
             >
               <Text fontSize="p-desktop" fontWeight="500" fontFamily="poppins">
-                {classInfo.name}
+                {classInfo.judul}
               </Text>
-              <Flex alignItems="center" justifyContent="space-between" mt={3}>
-                <Text fontSize="p-desktop" fontFamily="poppins">
-                  Status:
-                </Text>
-                {getStatusIcon(classInfo.status)}
-              </Flex>
-              <Flex justifyContent="space-between" mt={5}>
-                <Button colorScheme="green" size="sm">
-                  Edit
-                </Button>
-                <Button colorScheme="blue" size="sm">
-                  Participants
-                </Button>
-              </Flex>
+              <Text mt={2} fontSize="p-desktop" fontFamily="poppins">
+                {classInfo.deskripsi}
+              </Text>
+              <Text mt={2} fontSize="p-desktop" fontFamily="poppins">
+                Schedule: {classInfo.jadwalWaktu}
+              </Text>
+              <Text mt={2} fontSize="p-desktop" fontFamily="poppins">
+                Participants: {classInfo.currentParticipant} /{" "}
+                {classInfo.maxParticipant}
+              </Text>
+              <Button
+                colorScheme="blue"
+                size="sm"
+                mt={3}
+                onClick={() => viewDetails(classInfo.id)}
+              >
+                View Details
+              </Button>
             </Box>
           ))}
         </SimpleGrid>

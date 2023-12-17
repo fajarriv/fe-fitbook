@@ -3,20 +3,19 @@ import React from "react";
 import ClientDashboard from "@/components/dashboard/ClientDashboard";
 import TrainerDashboard from "@/components/dashboard/TrainerDashboard";
 import RootLayout from "../layout";
-// import AdminDashboard from "./AdminDashboard";
-// import { useAuth } from "../hooks/useAuth";
+import { useAuthContext } from "@/contexts/authContext";
 
 const Dashboard = () => {
-  //   const { userRole } = useAuth();
-  const userRole = "client";
+  const { pengguna } = useAuthContext();
+  const userRole = pengguna.role;
 
   let DashboardComponent;
 
   switch (userRole) {
-    case "client":
+    case "User":
       DashboardComponent = ClientDashboard;
       break;
-    case "trainer":
+    case "Trainer":
       DashboardComponent = TrainerDashboard;
       break;
     // case "admin":

@@ -2,6 +2,7 @@
 import { useCustomToast } from "@/components/elements/Toast";
 import { useToken } from "@/hooks/useToken";
 import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -38,6 +39,7 @@ const AuthContext = createContext({});
 export const AuthContextProvider = ({ children }) => {
   const [pengguna, setPengguna] = useState();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
 
   const { showToast } = useCustomToast("auth");
 
@@ -72,7 +74,7 @@ export const AuthContextProvider = ({ children }) => {
     try {
       const response = await fetch(`${baseUrl}/login`, {
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
@@ -127,7 +129,7 @@ export const AuthContextProvider = ({ children }) => {
 
       const response = await fetch(`${baseUrl}/register`, {
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(reqBody),
