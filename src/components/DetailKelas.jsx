@@ -2,8 +2,10 @@
 import { useEffect, useState } from "react";
 import useFetchWithToken from "@/hooks/fetchWithToken";
 import { useRouter } from "next/navigation";
+import { useToken } from "@/hooks/useToken";
 
 const DetailKelas = ({ id }) => {
+  const { getPenggunaToken } = useToken()
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const fetchWithToken = useFetchWithToken();
@@ -21,7 +23,12 @@ const DetailKelas = ({ id }) => {
         try {
           if (id) {
             const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/sesi-kelas/${id}`;
-            const response = await fetch(apiUrl);
+            const response = await fetch(apiUrl, {
+              method: "GET",
+              headers: {
+                "Authorization": `Bearer ${getPenggunaToken()}`
+              }
+            });
             const data = await response.json();
             setKelasDetail(data.data);
           }
