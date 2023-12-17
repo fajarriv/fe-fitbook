@@ -29,11 +29,11 @@ const TrainerDashboard = () => {
   }, [status]);
 
   const viewDetails = (classId) => {
-    router.push(`${process.env.NEXT_PUBLIC_API_URL}/sesi-kelas/${classId}`);
+    router.push(`detailKelas/${classId}`);
   };
 
   return (
-    <Box bg="cream" minH="100vh" p={5} paddingTop={5}>
+    <Box bg="cream" minH="100vh" p={5} paddingTop={20}>
       <Flex flexDirection="column" alignItems="center">
         <Text
           fontSize="h2-desktop"
