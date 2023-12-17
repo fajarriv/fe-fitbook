@@ -1,12 +1,30 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Box, Flex, Text, Button, SimpleGrid, Select } from "@chakra-ui/react";
+import {
+  Box,
+  Modal,
+  ModalBody,
+  ModalOverlay,
+  ModalContent,
+  ModalCloseButton,
+  ModalHeader,
+  Flex,
+  Text,
+  Button,
+  SimpleGrid,
+  Select,
+  useDisclosure,
+  Icon,
+} from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import useFetchWithToken from "@/hooks/fetchWithToken";
+import CreateSessionForm from "./CreateSessionForm";
+import { AddIcon } from "@chakra-ui/icons";
 
 const TrainerDashboard = () => {
   const [status, setStatus] = useState("Ongoing");
   const [classes, setClasses] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
 
   const fetchWithToken = useFetchWithToken();
@@ -87,10 +105,40 @@ const TrainerDashboard = () => {
               </Button>
             </Box>
           ))}
+          <Box
+            p={5}
+            shadow="md"
+            borderWidth="1px"
+            bg="white"
+            rounded="md"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            cursor="pointer"
+            onClick={onOpen}
+          >
+            <Icon as={AddIcon} w={10} h={10} />
+          </Box>
         </SimpleGrid>
+        <CreateSessionModal isOpen={isOpen} onClose={onClose} />
       </Flex>
     </Box>
   );
 };
 
 export default TrainerDashboard;
+
+const CreateSessionModal = ({ isOpen, onClose }) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Create New Session</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <CreateSessionForm onClose={onClose} />
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+};

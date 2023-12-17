@@ -1,74 +1,182 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+"use client";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Box,
+  Text,
+  Button,
+  VStack,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
+import useFetchWithToken from "@/hooks/fetchWithToken";
 
 export default function Page() {
-  const [daftarKelas, setDaftarKelas] = useState([])
-
-  const router = useRouter()
-
+  const [daftarKelas, setDaftarKelas] = useState([]);
+  const [orderedClasses, setOrderedClasses] = useState([]); // Array of IDs of ordered classes
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedClass, setSelectedClass] = useState(null);
+  const fetchWithToken = useFetchWithToken();
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchClass = async () => {
+    // Fetch class list
+    const fetchClassList = async () => {
       try {
-        // ini tembak api
-        const hardcodedData = [
-          {
-            id: '04eef712-19d1-484a-8076-668626d820c8',
-            judul: 'Kelas Aerobik Mantap',
-            deskripsi: 'Membuat jantung dan badan sehat',
-            jadwalWaktu: '21-12-2023 19:00',
-            maxParticipant: 20,
-            currentParticipant: 0,
-          },
-          {
-            id: '098b8650-e088-4458-b60c-5fec0e7e67e5',
-            judul: 'Kelas Aerobik Mantap',
-            deskripsi: 'Membuat jantung dan badan sehat',
-            jadwalWaktu: '21-12-2023 21:00',
-            maxParticipant: 20,
-            currentParticipant: 0,
-          },
-        ]
-
-        setDaftarKelas(hardcodedData)
-        console.log(daftarKelas)
+        const response = await fetchWithToken(
+          `${process.env.NEXT_PUBLIC_API_URL}/sesi-kelas`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch classes");
+        }
+        const data = await response.json();
+        setDaftarKelas(data.data || []);
       } catch (error) {
-        console.error('Error fetching users:', error)
+        console.error("Error fetching classes:", error);
       }
+    };
+
+    // Fetch user's orders
+    const fetchOrders = async () => {
+      try {
+        const response = await fetchWithToken(
+          `${process.env.NEXT_PUBLIC_API_URL}/user/pesanan/Ongoing`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+        const data = await response.json();
+        setOrderedClasses(data.data.map((order) => order.sesiKelas.id));
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchClassList();
+    fetchOrders();
+  }, []);
+
+  const orderClassConfirmation = (kelas) => {
+    setSelectedClass(kelas);
+    onOpen();
+  };
+  const isClassOrdered = (classId) => {
+    return orderedClasses.includes(classId);
+  };
+
+  const handleOrder = async (classId) => {
+    try {
+      const response = await fetchWithToken(
+        `${process.env.NEXT_PUBLIC_API_URL}/pesanan/${classId}`,
+        "POST"
+      );
+      if (response.ok) {
+        // Handle successful order
+        router.push("/dashboard");
+      } else {
+        // Handle error
+      }
+    } catch (error) {
+      console.error("Error ordering class:", error);
     }
+  };
 
-    fetchClass()
-  }, [daftarKelas])
+  const handleCancelOrder = (classId) => {
+    // Implement cancel order logic
+    // Redirect to dashboard after canceling
+    router.push("/dashboard");
+  };
 
-  const handleCardClick = (kelas) => {
-    // redirect ke detail kelas
-    router.push(`/detailKelas/${kelas.id}`)
-  }
+  const handleCardClick = (kelasId) => {
+    router.push(`/detailKelas/${kelasId}`);
+  };
+
+  const isPastClass = (jadwalWaktu) => {
+    return new Date(jadwalWaktu) < new Date();
+  };
 
   return (
-    <>
-      <div className="container mx-auto mt-10">
-      <h1 className="text-3xl font-bold mb-5">Daftar Kelas</h1>
-      
+    <Box className="container mx-auto mt-10" paddingTop={10}>
+      <Text fontSize="3xl" fontWeight="bold" mb={5}>
+        Daftar Kelas
+      </Text>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Konfirmasi Pesanan</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {`Lanjutkan untuk pesan kelas ${selectedClass?.judul}?`}
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => handleOrder(selectedClass?.id)}
+            >
+              Konfirmasi
+            </Button>
+            <Button variant="ghost" onClick={onClose}>
+              Batalkan
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <VStack spacing={4}>
         {daftarKelas.map((kelas) => (
-          <div
-            className="bg-white shadow-md rounded-lg p-4 cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 mb-4"
+          <Box
             key={kelas.id}
-            onClick={() => handleCardClick(kelas)}
+            bg={isPastClass(kelas.jadwalWaktu) ? "gray.200" : "white"}
+            shadow="md"
+            rounded="lg"
+            p={4}
+            w="full"
+            cursor="pointer"
+            _hover={{ transform: "scale(1.05)" }}
+            transition="ease-in-out 0.3s"
           >
-            <h2 className="text-gray-500 font-semibold mb-2">{kelas.judul}</h2>
-            <p className="text-gray-600 mb-2">{kelas.deskripsi}</p>
-            <p className="text-gray-500">Jadwal: {kelas.jadwalWaktu}</p>
-            <div className="flex justify-between items-center mt-4">
-              <p className="text-gray-500">
+            <Text color="gray.500" fontWeight="semibold" mb={2}>
+              {kelas.judul}
+            </Text>
+            <Text color="gray.600" mb={2}>
+              {kelas.deskripsi}
+            </Text>
+            <Text color="gray.500">Jadwal: {kelas.jadwalWaktu}</Text>
+            <Box
+              mt={4}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Text color="gray.500">
                 Participants: {kelas.currentParticipant}/{kelas.maxParticipant}
-              </p>
-            </div>
-          </div>
+              </Text>
+              <Button
+                colorScheme={isClassOrdered(kelas.id) ? "red" : "green"}
+                onClick={() =>
+                  isClassOrdered(kelas.id)
+                    ? handleCancelOrder(kelas.id)
+                    : orderClassConfirmation(kelas)
+                }
+              >
+                {isClassOrdered(kelas.id) ? "Batalkan Pesanan" : "Pesan"}
+              </Button>
+              <Button
+                colorScheme="blue"
+                onClick={() => router.push(`/detailKelas/${kelas.id}`)}
+              >
+                View Class Details
+              </Button>
+            </Box>
+          </Box>
         ))}
-      
-    </div>
-    </>
-  )
+      </VStack>
+    </Box>
+  );
 }
