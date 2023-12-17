@@ -27,7 +27,7 @@ const ClientDashboard = () => {
     };
 
     fetchOrders();
-  }, [status, fetchWithToken]);
+  }, [status]);
 
   const viewDetails = (classId) => {
     router.push(`detailKelas/${classId}`);
